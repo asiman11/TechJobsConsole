@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Linq;
 
 namespace TechJobsConsole
 {
@@ -37,7 +40,6 @@ namespace TechJobsConsole
             }
             return values;
         }
-
         public static List<Dictionary<string, string>> FindByColumnAndValue(string column, string value)
         {
             // load data, if not already loaded
@@ -48,16 +50,39 @@ namespace TechJobsConsole
             foreach (Dictionary<string, string> row in AllJobs)
             {
                 string aValue = row[column];
-
                 if (aValue.Contains(value))
                 {
                     jobs.Add(row);
                 }
             }
-
             return jobs;
         }
+        public static List<Dictionary<string, string>> FindByValue(string Value)
+        {
+            // load data, if not already loaded
+            LoadData();
 
+            List<Dictionary<string, string>> Package = new List<Dictionary<string, string>>();
+
+            foreach (Dictionary<string, string> job in AllJobs)
+            {
+                foreach (KeyValuePair<string, string> item in job)
+                {
+                    string aKey = item.Key.ToUpper();
+                    string aValue = item.Value.ToUpper();
+                    string aSearch = Value.ToUpper();
+
+                    if (Package.Contains(job) == false)
+                    {
+                        if (aValue.Contains(aSearch))
+                        {
+                            Package.Add(job);
+                        }
+                    }
+                }
+            }
+            return Package;
+        }
         /*
          * Load and parse data from job_data.csv
          */
@@ -101,10 +126,6 @@ namespace TechJobsConsole
 
             IsDataLoaded = true;
         }
-
-        /*
-         * Parse a single line of a CSV file into a string array
-         */
         private static string[] CSVRowToStringArray(string row, char fieldSeparator = ',', char stringSeparator = '\"')
         {
             bool isBetweenQuotes = false;
@@ -138,5 +159,6 @@ namespace TechJobsConsole
 
             return rowValues.ToArray();
         }
+        //Parse a single line of a CSV file into a string array
     }
 }
