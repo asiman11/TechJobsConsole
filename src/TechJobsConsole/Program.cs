@@ -48,7 +48,7 @@ namespace TechJobsConsole
                     // What is their search term?
                     Console.WriteLine("\nSearch term: ");
                     string searchTerm = Console.ReadLine();
-                    //searchTerm = searchTerm.ToLower();
+                    searchTerm = searchTerm.ToLower();
                     List<Dictionary<string, string>> searchResults;
                     // Fetch results
 
@@ -102,6 +102,13 @@ namespace TechJobsConsole
         }
         private static void PrintJobs(List<Dictionary<string, string>> someJobs)
         {
+            //if somejobs has no jobs in it
+            if (someJobs.Count == 0)
+            {
+                Console.WriteLine("No results found.");
+            }
+                //then pirnt error message
+
             foreach (var job in someJobs)
             {
                 var name = (string)job["name"];
